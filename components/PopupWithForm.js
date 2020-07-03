@@ -5,13 +5,11 @@ export default class PopupWithForm extends Popup {
     super(popupSelector);
     this._formSubmitHandler = formSubmitHandler;
   }
-
-  close() {
-    super.close();
-    setTimeout(() => {
-      this._form.reset();
-      this.hideError();
-    }, 200);
+  
+  open() {
+    super.open();
+    this._form.reset();
+    this.hideError();
   }
 
   _getInputValues() {
