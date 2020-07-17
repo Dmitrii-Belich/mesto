@@ -12,7 +12,6 @@ export const popupsInfo = [
     name: "avatar",
     title: "Обновить аватар",
     buttonTitle: "Сохранить",
-    buttonLoadingTitle: "Сохранение...",
     children: (
       <>
         <input
@@ -31,13 +30,11 @@ export const popupsInfo = [
     name: "delete",
     title: "Вы уверены?",
     buttonTitle: "Да",
-    buttonLoadingTitle: "Удаление...",
   },
   {
     name: "edit",
     title: "Редактировать профиль",
     buttonTitle: "Сохранить",
-    buttonLoadingTitle: "Сохранение...",
     children: (
       <>
         <input
@@ -66,7 +63,6 @@ export const popupsInfo = [
     name: "add",
     title: "Новое место",
     buttonTitle: "Создать",
-    buttonLoadingTitle: "Создание...",
     children: (
       <>
         <input
