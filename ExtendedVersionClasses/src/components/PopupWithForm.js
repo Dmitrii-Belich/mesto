@@ -5,6 +5,7 @@ import Input from "./ui/Input.js";
 export default class PopupWithForm extends React.Component {
   constructor(props) {
     super(props);
+
     this.initialInputs = {};
     this.initialValidity = {};
     if (this.props.settings.name === "avatar") {
@@ -16,18 +17,19 @@ export default class PopupWithForm extends React.Component {
         forename: this.props.forename,
         job: this.props.job,
       };
-
       this.initialValidity = { forename: true, job: true };
     }
     if (this.props.settings.name === "add") {
       this.initialInputs = { title: "", url: "" };
       this.initialValidity = { title: false, url: false };
     }
+
     this.state = {
       buttonText: this.props.settings.buttonTitle,
       inputs: this.initialInputs,
       validity: this.initialValidity,
     };
+
     this.inputOnChange = (value, name, validity) => {
       const newInputs = { ...this.state.inputs };
       newInputs[name] = value;
@@ -36,6 +38,7 @@ export default class PopupWithForm extends React.Component {
       this.setState({ validity: newValidity, inputs: newInputs });
     };
   }
+
   componentDidUpdate(prevProps) {
     if (
       this.props.settings.name === "edit" &&
@@ -47,7 +50,8 @@ export default class PopupWithForm extends React.Component {
       });
     }
   }
-  isFormValid() {
+
+  _isFormValid() {
     if (this.state.validity) {
       if (!Object.values(this.state.validity).length) {
         return true;
@@ -59,6 +63,7 @@ export default class PopupWithForm extends React.Component {
       );
     }
   }
+
   _clearInputs() {
     if (this.props.settings.name === "edit") {
       this.setState({
@@ -72,18 +77,35 @@ export default class PopupWithForm extends React.Component {
       });
     }
   }
+
   _submitProcess() {
     this.setState({ buttonText: this.props.settings.buttonLoadingTitle });
   }
+
   _submitError() {
     this.setState({ buttonText: "Ошибка" });
   }
+
   _submitSuccessfully() {
     this.setState({ buttonText: this.props.settings.buttonTitle });
   }
+
+  _closeButtonHandler() {
+    this.props.onClose();
+    setTimeout(() => {
+      this._submitSuccessfully();
+      this._clearInputs();
+    }, 200);
+  }
+
   render() {
     return (
-      <Popup isOpen={this.props.isOpen} onClose={this.props.onClose}>
+      <Popup
+        isOpen={this.props.isOpen}
+        onClose={() => {
+          this._closeButtonHandler();
+        }}
+      >
         <form
           className="popup__container"
           onSubmit={(evt) => {
@@ -173,9 +195,9 @@ export default class PopupWithForm extends React.Component {
           <button
             type="submit"
             className={`popup__save ${
-              this.isFormValid() ? "" : "popup__save_display_error"
+              !this._isFormValid() && "popup__save_display_error"
             }`}
-            disabled={this.isFormValid() ? "" : "disabled"}
+            disabled={!this._isFormValid() && "disabled"}
           >
             {this.state.buttonText}
           </button>
@@ -183,11 +205,7 @@ export default class PopupWithForm extends React.Component {
             type="button"
             className="popup__exit-button"
             onClick={() => {
-              this.props.onClose();
-              setTimeout(() => {
-                this._submitSuccessfully();
-                this._clearInputs();
-              }, 200);
+              this._closeButtonHandler();
             }}
           ></button>
         </form>

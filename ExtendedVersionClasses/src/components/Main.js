@@ -1,31 +1,7 @@
 import React from "react";
-//import { api } from "../utils/Api.js";
 import Card from "./Card.js";
 
 export default class Main extends React.Component {
-/*   constructor(props) {
-    super(props);
-    this.state = {
-      cards: [],
-      avatarUrl: "",
-      name: "",
-      about: "",
-    };
-  } */
-
-/*   componentDidMount() {
-    api.getInitialCards().then((value) => {
-      this.setState({ cards: value });
-    });
-    api.getUserInformation().then((value) => {
-      this.userId = value._id;
-      this.setState({
-        avatarUrl: value.avatar,
-        name: value.name,
-        about: value.about,
-      });
-    });
-  } */
   render() {
     return (
       <main>
@@ -71,8 +47,8 @@ export default class Main extends React.Component {
                 title={item.name}
                 url={item.link}
                 likeCount={item.likes.length}
-                cardId = {item._id}
-                onDelete = {this.props.onDelete}
+                cardId={item._id}
+                onDelete={this.props.onDelete}
               />
             );
           })}

@@ -23,6 +23,7 @@ class App extends React.Component {
       name: "",
       about: "",
     };
+
     this.closeAllPopups = () => {
       this.setState({
         editPopupState: false,
@@ -33,21 +34,27 @@ class App extends React.Component {
         selectedCard: {},
       });
     };
+
     this.isEditProfilePopupOpen = () => {
       this.setState({ editPopupState: true });
     };
+
     this.isAddPlacePopupOpen = () => {
       this.setState({ addPopupState: true });
     };
+
     this.isEditAvatarPopupOpen = () => {
       this.setState({ avatarPopupState: true });
     };
+
     this.handleCardClick = (card) => {
       this.setState({ selectedCard: card, imgPopupState: true });
     };
+
     this.handleDeleteClick = (card) => {
       this.setState({ deletePopupState: true, selectedCard: card });
     };
+
     this.deletePopupSubmitHandler = async () => {
       let isSucssesful = false;
       await this.state.selectedCard.cardDelete().then(() => {
@@ -59,6 +66,7 @@ class App extends React.Component {
       }
       return Promise.reject();
     };
+
     this.avatarPopupSubmitHandler = async (inputs) => {
       let isSucssesful = false;
       await api.setUserAvatar(inputs).then((data) => {
@@ -71,6 +79,7 @@ class App extends React.Component {
       }
       return Promise.reject();
     };
+
     this.addPopupSubmitHandler = async (inputs) => {
       let isSucssesful = false;
       await api
@@ -85,6 +94,7 @@ class App extends React.Component {
       }
       return Promise.reject();
     };
+    
     this.editPopupSubmitHandler = async (inputs) => {
       let isSucssesful = false;
       await api

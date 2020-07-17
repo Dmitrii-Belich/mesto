@@ -6,9 +6,10 @@ import PopupWithForm from "./PopupWithForm.js";
 import PopupWithImage from "./PopupWithImage.js";
 import { popupsInfo } from "../utils/constants.js";
 
-class App extends React.Component {
+export default class App extends React.Component {
   constructor() {
     super();
+
     this.state = {
       editPopupState: false,
       addPopupState: false,
@@ -17,6 +18,7 @@ class App extends React.Component {
       imgPopupState: false,
       selectedCard: {},
     };
+
     this.closeAllPopups = () => {
       this.setState({
         editPopupState: false,
@@ -27,18 +29,23 @@ class App extends React.Component {
         selectedCard: {},
       });
     };
+
     this.isEditProfilePopupOpen = () => {
       this.setState({ editPopupState: true });
     };
+
     this.isAddPlacePopupOpen = () => {
       this.setState({ addPopupState: true });
     };
+
     this.isEditAvatarPopupOpen = () => {
       this.setState({ avatarPopupState: true });
     };
+
     this.handleCardClick = (card) => {
       this.setState({ selectedCard: card, imgPopupState: true });
     };
+
   }
 
   render() {
@@ -64,7 +71,9 @@ class App extends React.Component {
               isOpen={this.state[`${item.name}PopupState`]}
               settings={item}
               onClose={this.closeAllPopups}
-            >{item.children} </PopupWithForm>
+            >
+              {item.children}{" "}
+            </PopupWithForm>
           );
         })}
       </>
@@ -72,4 +81,3 @@ class App extends React.Component {
   }
 }
 
-export default App;

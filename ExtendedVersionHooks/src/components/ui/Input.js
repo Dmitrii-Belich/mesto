@@ -1,18 +1,21 @@
 import React from "react";
 
 export default function Input(props) {
+
   const [isInputValid, setIsInputValid] = React.useState(true);
   const [validationMessage, setValidationMessage] = React.useState("");
+
   React.useEffect(() => {
     setIsInputValid(true);
     setValidationMessage("");
   }, [props.update]);
+
   const changeHandler = (evt) => {
     props.onChange(evt.target.value, props.name, evt.target.validity.valid);
-
     setIsInputValid(evt.target.validity.valid);
     setValidationMessage(evt.target.validationMessage);
   };
+  
   return (
     <>
       <input

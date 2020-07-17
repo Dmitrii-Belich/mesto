@@ -6,11 +6,11 @@ export default function PopupWithForm(props) {
   let initialInputs = {};
   let initialValidity = {};
   switch (props.settings.name) {
-    case "avatar": // if (x === 'value1')
+    case "avatar":
       initialInputs = { avatar: "" };
       initialValidity = { avatar: false };
       break;
-    case "edit": // if (x === 'value2')
+    case "edit":
       initialInputs = {
         forename: props.forename,
         job: props.job,
@@ -29,6 +29,7 @@ export default function PopupWithForm(props) {
   );
   const [inputs, setInputs] = React.useState(initialInputs);
   const [validity, setValidity] = React.useState(initialValidity);
+
   const inputOnChange = (value, name, InputValidity) => {
     const newInputs = { ...inputs };
     newInputs[name] = value;
@@ -40,12 +41,14 @@ export default function PopupWithForm(props) {
     console.log(newValidity);
     setValidity(newValidity);
   };
+
   React.useEffect(() => {
     if (props.settings.name === "edit") {
       setInputs({ forename: props.forename, job: props.job });
       console.log("set");
     }
   }, [props.forename, props.job, props.settings.name, props.isOpen]);
+
   function isFormValid() {
     if (validity) {
       if (!Object.values(validity).length) {
@@ -56,6 +59,7 @@ export default function PopupWithForm(props) {
       });
     }
   }
+
   function _clearInputs() {
     if (props.settings.name === "edit") {
       setInputs({ forename: props.forename, job: props.job });
@@ -65,12 +69,15 @@ export default function PopupWithForm(props) {
       setValidity(initialValidity);
     }
   }
+
   function _submitProcess() {
     setButtonText(props.settings.buttonLoadingTitle);
   }
+
   function _submitError() {
     setButtonText("Ошибка");
   }
+
   function _submitSuccessfully() {
     setButtonText(props.settings.buttonTitle);
   }
@@ -166,9 +173,9 @@ export default function PopupWithForm(props) {
         <button
           type="submit"
           className={`popup__save ${
-            isFormValid() ? "" : "popup__save_display_error"
+            !isFormValid() && "popup__save_display_error"
           }`}
-          disabled={isFormValid() ? "" : "disabled"}
+          disabled={!isFormValid() && "disabled"}
         >
           {buttonText}
         </button>

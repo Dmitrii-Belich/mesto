@@ -18,13 +18,13 @@ export default class Card extends React.Component {
         <h2 className="card__title">{this.props.title}</h2>
         <button
           className={`card__like ${
-            this.props.isLiked ? "card__like_mode_active" : ""
+            this.props.isLiked && "card__like_mode_active"
           }`}
         ></button>
         <p className="card__like-count">{this.props.likeCount}</p>
-        {this.props.ownerId === this.props.userId ? (
+        {this.props.ownerId === this.props.userId && (
           <button className="card__delete"></button>
-        ) : ("")}
+        )}
       </div>
     );
   }

@@ -1,12 +1,11 @@
 import React from "react";
 
 export default class PopupWithImage extends React.Component {
-
   render() {
     return (
       <div
         className={`popup popup_target_img ${
-          this.props.isOpen ? "popup_display_opened" : ""
+          this.props.isOpen && "popup_display_opened"
         }`}
       >
         <div className="popup__image-container">

@@ -7,21 +7,23 @@ import PopupWithImage from "./PopupWithImage.js";
 import { popupsInfo } from "../utils/constants.js";
 
 export default function App() {
+
   const [editPopupState, setEditPopupState] = React.useState(false);
   const [addPopupState, setAddPopupState] = React.useState(false);
   const [avatarPopupState, setAvatarPopupState] = React.useState(false);
   const [deletePopupState, setDeletePopupState] = React.useState(false);
   const [imgPopupState, setImgPopupState] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
-  const popupsState = 
-    {
-      editPopupState,
-      addPopupState,
-      avatarPopupState,
-      deletePopupState,
-      imgPopupState,
-      selectedCard,
-    };
+
+  const popupsState = {
+    editPopupState,
+    addPopupState,
+    avatarPopupState,
+    deletePopupState,
+    imgPopupState,
+    selectedCard,
+  };
+
   const closeAllPopups = () => {
     setEditPopupState(false);
     setAddPopupState(false);
@@ -30,15 +32,19 @@ export default function App() {
     setImgPopupState(false);
     setSelectedCard({});
   };
+
   const isEditProfilePopupOpen = () => {
     setEditPopupState(true);
   };
+
   const isAddPlacePopupOpen = () => {
     setAddPopupState(true);
   };
+
   const isEditAvatarPopupOpen = () => {
     setAvatarPopupState(true);
   };
+  
   const handleCardClick = (card) => {
     setImgPopupState(true);
     setSelectedCard(card);

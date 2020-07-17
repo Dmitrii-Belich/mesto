@@ -29,6 +29,7 @@ export default class Card extends React.Component {
         });
     };
   }
+
   async cardDelete() {
     let isSucssesful = false;
     await api
@@ -45,6 +46,7 @@ export default class Card extends React.Component {
     }
     return Promise.reject();
   }
+
   render() {
     if (this.state.cardExist) {
       return (
@@ -64,19 +66,17 @@ export default class Card extends React.Component {
           <button
             onClick={this.likeButtonHandler}
             className={`card__like ${
-              this.state.isLiked ? "card__like_mode_active" : ""
+              this.state.isLiked && "card__like_mode_active"
             }`}
           ></button>
           <p className="card__like-count">{this.state.likeCount}</p>
-          {this.props.ownerId === this.props.userId ? (
+          {this.props.ownerId === this.props.userId && (
             <button
               className="card__delete"
               onClick={() => {
                 this.props.onDelete(this);
               }}
             ></button>
-          ) : (
-            ""
           )}
         </div>
       );

@@ -5,7 +5,7 @@ export default class Popup extends React.Component {
     return (
       <div
         className={`popup popup_target_img ${
-          this.props.isOpen ? "popup_display_opened" : ""
+          this.props.isOpen && "popup_display_opened"
         }`}
       >
         {this.props.children}
