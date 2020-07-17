@@ -16,7 +16,7 @@ class App extends React.Component {
       avatarPopupState: false,
       deletePopupState: false,
       imgPopupState: false,
-      selectedCard: "",
+      selectedCard: {},
       userId: "",
       cards: [],
       avatarUrl: "",
@@ -30,7 +30,7 @@ class App extends React.Component {
         avatarPopupState: false,
         deletePopupState: false,
         imgPopupState: false,
-        selectedCard: "",
+        selectedCard: {},
       });
     };
     this.isEditProfilePopupOpen = () => {
@@ -158,7 +158,7 @@ class App extends React.Component {
               settings={item}
               onClose={this.closeAllPopups}
               forename={this.state.name}
-              job= {this.state.about}
+              job={this.state.about}
             />
           );
         })}

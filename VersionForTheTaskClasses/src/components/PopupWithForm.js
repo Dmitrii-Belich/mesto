@@ -14,7 +14,7 @@ export default class PopupWithForm extends React.Component {
           noValidate
         >
           <h2 className="popup__title">{this.props.settings.title}</h2>
-          {this.props.settings.children}
+          {this.props.children}
           <button
             type="submit"
             className="popup__save"

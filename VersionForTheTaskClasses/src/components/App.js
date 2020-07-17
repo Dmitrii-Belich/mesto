@@ -64,7 +64,7 @@ class App extends React.Component {
               isOpen={this.state[`${item.name}PopupState`]}
               settings={item}
               onClose={this.closeAllPopups}
-            />
+            >{item.children} </PopupWithForm>
           );
         })}
       </>

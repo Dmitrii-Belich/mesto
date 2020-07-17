@@ -1,14 +1,9 @@
 import React from "react";
-
+import Popup from "./Popup.js";
 export default class PopupWithImage extends React.Component {
-
   render() {
     return (
-      <div
-        className={`popup popup_target_img ${
-          this.props.isOpen ? "popup_display_opened" : ""
-        }`}
-      >
+      <Popup isOpen={this.props.isOpen} onClose={this.props.onClose}>
         <div className="popup__image-container">
           <img
             alt={this.props.card.title}
@@ -21,8 +16,7 @@ export default class PopupWithImage extends React.Component {
             onClick={this.props.onClose}
           ></button>
         </div>
-        <div className="popup__overlay" onClick={this.props.onClose}></div>
-      </div>
+      </Popup>
     );
   }
 }

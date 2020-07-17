@@ -18,3 +18,10 @@
 .profile__avatar-overlay:hover  {
   opacity: 1;
 }
+
+
+@media screen and (max-width: 619px) {
+  .profile__avatar-overlay {
+    margin-left: 60px;
+  }
+}
