@@ -7,6 +7,12 @@ export default class Input extends React.Component {
             isInputValid: true, 
             validationMessage: ""
         }
+        this.changeHandler = (evt) => {this.props.onChange(evt.target.value, this.props.name, evt.target.validity.valid);
+            this.setState({
+                isInputValid:  evt.target.validity.valid, 
+                validationMessage: evt.target.validationMessage
+            })
+            }
     }
     componentDidUpdate(prevProps) {
         if (prevProps.update !== this.props.update) {
@@ -26,12 +32,7 @@ export default class Input extends React.Component {
           name={this.props.name}
           required={this.props.required}
           placeholder={this.props.placeholder}
-          onChange={(evt) => {this.props.onChange(evt.target.value, this.props.name, evt.target.validity.valid);
-        this.setState({
-            isInputValid:  evt.target.validity.valid, 
-            validationMessage: evt.target.validationMessage
-        })
-        }}
+          onChange={this.changeHandler}
           value = {this.props.value}
           maxLength ={this.props.maxLength}
           minLength ={this.props.minLength}

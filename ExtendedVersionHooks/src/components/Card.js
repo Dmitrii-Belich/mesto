@@ -1,40 +1,33 @@
 import React from "react";
 import { api } from "../utils/Api.js";
 
-export default class Card extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLiked: this.props.isLiked,
-      likeCount: this.props.likeCount,
-      cardExist: true,
-    };
-
-    this.likeButtonHandler = () => {
+export default function Card (props) {
+    const [isLiked, setIsLiked] = React.useState(props.isLiked)
+    const [likeCount, setLikeCount] = React.useState(props.likeCount)
+    const [cardExist, setCardExist] = React.useState(true)
+    const likeButtonHandler = () => {
       let action;
-      if (this.state.isLiked) {
-        action = api.deleteLike(this.props.cardId);
+      if (isLiked) {
+        action = api.deleteLike(props.cardId);
       } else {
-        action = api.setLike(this.props.cardId);
+        action = api.setLike(props.cardId);
       }
       return action
         .then((data) => {
-          this.setState({
-            isLiked: !this.state.isLiked,
-            likeCount: data.likes.length,
-          });
+            setIsLiked( !isLiked)
+            setLikeCount(data.likes.length)
         })
         .catch((err) => {
           console.log(err);
         });
     };
-  }
-  async cardDelete() {
+ const cardDelete =  async () =>{
+   console.log('Удаляю')
     let isSucssesful = false;
     await api
-      .deleteCard(this.props.cardId)
+      .deleteCard(props.cardId)
       .then(() => {
-        this.setState({ cardExist: false });
+        setCardExist(false);
         isSucssesful = true;
       })
       .catch((err) => {
@@ -45,34 +38,35 @@ export default class Card extends React.Component {
     }
     return Promise.reject();
   }
-  render() {
-    if (this.state.cardExist) {
+
+    if (cardExist) {
       return (
         <div className="card">
           <img
             alt="Изображение карточки"
             className="card__image"
             onClick={() => {
-              this.props.onCardClick({
-                url: this.props.url,
-                title: this.props.title,
+              props.onCardClick({
+                url: props.url,
+                title: props.title,
               });
             }}
-            src={this.props.url}
+            src={props.url}
           />
-          <h2 className="card__title">{this.props.title}</h2>
+          <h2 className="card__title">{props.title}</h2>
           <button
-            onClick={this.likeButtonHandler}
+            onClick={likeButtonHandler}
             className={`card__like ${
-              this.state.isLiked ? "card__like_mode_active" : ""
+              isLiked ? "card__like_mode_active" : ""
             }`}
           ></button>
-          <p className="card__like-count">{this.state.likeCount}</p>
-          {this.props.ownerId === this.props.userId ? (
+          <p className="card__like-count">{likeCount}</p>
+          {props.ownerId === props.userId ? (
             <button
               className="card__delete"
               onClick={() => {
-                this.props.onDelete(this);
+                props.onDelete(cardDelete);
+
               }}
             ></button>
           ) : (
@@ -83,5 +77,5 @@ export default class Card extends React.Component {
     } else {
       return "";
     }
-  }
+  
 }

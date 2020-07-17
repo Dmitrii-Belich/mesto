@@ -6,22 +6,23 @@ export default class PopupWithForm extends React.Component {
   constructor(props) {
     super(props);
     this.initialInputs = {};
-    if (this.props.settings.name === "avatar")
+    this.initialValidity = {};
+    if (this.props.settings.name === "avatar") {
       this.initialInputs = { avatar: "" };
-    if (this.props.settings.name === "edit")
+      this.initialValidity = { avatar: false };
+    }
+    if (this.props.settings.name === "edit") {
       this.initialInputs = {
         forename: this.props.forename,
         job: this.props.job,
       };
-    if (this.props.settings.name === "add")
-      this.initialInputs = { title: "", url: "" };
-    this.initialValidity = {};
-    if (this.props.settings.name === "avatar")
-      this.initialValidity = { avatar: false };
-    if (this.props.settings.name === "edit")
+
       this.initialValidity = { forename: true, job: true };
-    if (this.props.settings.name === "add")
+    }
+    if (this.props.settings.name === "add") {
+      this.initialInputs = { title: "", url: "" };
       this.initialValidity = { title: false, url: false };
+    }
     this.state = {
       buttonText: this.props.settings.buttonTitle,
       inputs: this.initialInputs,
@@ -30,10 +31,9 @@ export default class PopupWithForm extends React.Component {
     this.inputOnChange = (value, name, validity) => {
       const newInputs = { ...this.state.inputs };
       newInputs[name] = value;
-      this.setState({ inputs: newInputs });
       const newValidity = { ...this.state.validity };
       newValidity[name] = validity;
-      this.setState({ validity: newValidity });
+      this.setState({ validity: newValidity, inputs: newInputs });
     };
   }
   componentDidUpdate(prevProps) {

@@ -1,22 +1,20 @@
 import React from "react";
 import Popup from "./Popup.js";
-export default class PopupWithImage extends React.Component {
-  render() {
+export default function PopupWithImage (props) {
     return (
-      <Popup isOpen={this.props.isOpen} onClose={this.props.onClose}>
+      <Popup isOpen={props.isOpen} onClose={props.onClose}>
         <div className="popup__image-container">
           <img
-            alt={this.props.card.title}
+            alt={props.card.title}
             className="popup__image"
-            src={this.props.card.url}
+            src={props.card.url}
           />
-          <h2 className="popup__image-title">{this.props.card.title}</h2>
+          <h2 className="popup__image-title">{props.card.title}</h2>
           <button
             className="popup__exit-button"
-            onClick={this.props.onClose}
+            onClick={props.onClose}
           ></button>
         </div>
       </Popup>
     );
-  }
 }

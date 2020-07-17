@@ -1,43 +1,35 @@
 import React from "react";
 
-export default class Input extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state= {
-            isInputValid: true, 
-            validationMessage: ""
-        }
-    }
-    componentDidUpdate(prevProps) {
-        if (prevProps.update !== this.props.update) {
-            this.setState({
-                isInputValid: true, 
-                validationMessage: ""
-            })
-        }
-      }
-  render() {
-    return (
-        <> 
-         <input
-          type={this.props.type}
-          className={`popup__input ${!this.state.isInputValid && "popup__input_display_error"}`}
-          pattern={this.props.pattern}
-          name={this.props.name}
-          required={this.props.required}
-          placeholder={this.props.placeholder}
-          onChange={(evt) => {this.props.onChange(evt.target.value, this.props.name, evt.target.validity.valid);
-        this.setState({
-            isInputValid:  evt.target.validity.valid, 
-            validationMessage: evt.target.validationMessage
-        })
-        }}
-          value = {this.props.value}
-          maxLength ={this.props.maxLength}
-          minLength ={this.props.minLength}
-        />
-        <span className="popup__input-error">{this.state.validationMessage}</span>
-        </>
-    );
-  }
+export default function Input(props) {
+  const [isInputValid, setIsInputValid] = React.useState(true);
+  const [validationMessage, setValidationMessage] = React.useState("");
+  React.useEffect(() => {
+    setIsInputValid(true);
+    setValidationMessage("");
+  }, [props.update]);
+  const changeHandler = (evt) => {
+    props.onChange(evt.target.value, props.name, evt.target.validity.valid);
+
+    setIsInputValid(evt.target.validity.valid);
+    setValidationMessage(evt.target.validationMessage);
+  };
+  return (
+    <>
+      <input
+        type={props.type}
+        className={`popup__input ${
+          !isInputValid && "popup__input_display_error"
+        }`}
+        pattern={props.pattern}
+        name={props.name}
+        required={props.required}
+        placeholder={props.placeholder}
+        onChange={changeHandler}
+        value={props.value}
+        maxLength={props.maxLength}
+        minLength={props.minLength}
+      />
+      <span className="popup__input-error">{validationMessage}</span>
+    </>
+  );
 }

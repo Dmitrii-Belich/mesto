@@ -7,159 +7,156 @@ import PopupWithImage from "./PopupWithImage.js";
 import { popupsInfo } from "../utils/constants.js";
 import { api } from "../utils/Api.js";
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      editPopupState: false,
-      addPopupState: false,
-      avatarPopupState: false,
-      deletePopupState: false,
-      imgPopupState: false,
-      selectedCard: {},
-      userId: "",
-      cards: [],
-      avatarUrl: "",
-      name: "",
-      about: "",
-    };
-    this.closeAllPopups = () => {
-      this.setState({
-        editPopupState: false,
-        addPopupState: false,
-        avatarPopupState: false,
-        deletePopupState: false,
-        imgPopupState: false,
-        selectedCard: {},
-      });
-    };
-    this.isEditProfilePopupOpen = () => {
-      this.setState({ editPopupState: true });
-    };
-    this.isAddPlacePopupOpen = () => {
-      this.setState({ addPopupState: true });
-    };
-    this.isEditAvatarPopupOpen = () => {
-      this.setState({ avatarPopupState: true });
-    };
-    this.handleCardClick = (card) => {
-      this.setState({ selectedCard: card, imgPopupState: true });
-    };
-    this.handleDeleteClick = (card) => {
-      this.setState({ deletePopupState: true, selectedCard: card });
-    };
-    this.deletePopupSubmitHandler = async () => {
-      let isSucssesful = false;
-      await this.state.selectedCard.cardDelete().then(() => {
+export default function App() {
+  const [editPopupState, setEditPopupState] = React.useState(false);
+  const [addPopupState, setAddPopupState] = React.useState(false);
+  const [avatarPopupState, setAvatarPopupState] = React.useState(false);
+  const [deletePopupState, setDeletePopupState] = React.useState(false);
+  const [imgPopupState, setImgPopupState] = React.useState(false);
+  const [selectedCard, setSelectedCard] = React.useState({});
+  const [userId, setUserId] = React.useState("");
+  const [cards, setCards] = React.useState([]);
+  const [avatarUrl, setAvatarUrl] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [about, setAbout] = React.useState("");
+  const [deleteCardFunction, setDeleteCardFunction] = React.useState({})
+  const closeAllPopups = () => {
+    setEditPopupState(false);
+    setAddPopupState(false);
+    setAvatarPopupState(false);
+    setDeletePopupState(false);
+    setImgPopupState(false);
+    setSelectedCard({});
+    setDeleteCardFunction({})
+  };
+  const isEditProfilePopupOpen = () => {
+    setEditPopupState(true);
+  };
+  const isAddPlacePopupOpen = () => {
+    setAddPopupState(true);
+  };
+  const isEditAvatarPopupOpen = () => {
+    setAvatarPopupState(true);
+  };
+  const handleCardClick = (card) => {
+    setSelectedCard(card);
+    setImgPopupState(true);
+  };
+  const handleDeleteClick = (deleteCard) => {
+    setDeletePopupState(true);
+    setDeleteCardFunction({deleteCard});
+  };
+  const deletePopupSubmitHandler = async () => {
+    console.log(deleteCardFunction)
+    let isSucssesful = false;
+    await deleteCardFunction.deleteCard().then(() => {
+      isSucssesful = true;
+      closeAllPopups();
+    });
+    if (isSucssesful) {
+      return Promise.resolve();
+    }
+    return Promise.reject();
+  };
+  const avatarPopupSubmitHandler = async (inputs) => {
+    let isSucssesful = false;
+    await api.setUserAvatar(inputs).then((data) => {
+      setAvatarUrl(data.avatar);
+      isSucssesful = true;
+      closeAllPopups();
+    });
+    if (isSucssesful) {
+      return Promise.resolve();
+    }
+    return Promise.reject();
+  };
+  const addPopupSubmitHandler = async (inputs) => {
+    let isSucssesful = false;
+    await api
+      .createCard({ name: inputs.title, link: inputs.url })
+      .then((card) => {
+        setCards([card, ...cards]);
         isSucssesful = true;
-        this.closeAllPopups();
+        closeAllPopups();
       });
-      if (isSucssesful) {
-        return Promise.resolve();
-      }
-      return Promise.reject();
-    };
-    this.avatarPopupSubmitHandler = async (inputs) => {
-      let isSucssesful = false;
-      await api.setUserAvatar(inputs).then((data) => {
-        this.setState({ avatarUrl: data.avatar });
+    if (isSucssesful) {
+      return Promise.resolve();
+    }
+    return Promise.reject();
+  };
+  const editPopupSubmitHandler = async (inputs) => {
+    let isSucssesful = false;
+    await api
+      .setUserInfo({
+        name: inputs.forename,
+        about: inputs.job,
+      })
+      .then((data) => {
+        setName(data.name);
+        setAbout(data.about);
         isSucssesful = true;
-        this.closeAllPopups();
+        closeAllPopups();
       });
-      if (isSucssesful) {
-        return Promise.resolve();
-      }
-      return Promise.reject();
-    };
-    this.addPopupSubmitHandler = async (inputs) => {
-      let isSucssesful = false;
-      await api
-        .createCard({ name: inputs.title, link: inputs.url })
-        .then((card) => {
-          this.setState({ cards: [card, ...this.state.cards] });
-          isSucssesful = true;
-          this.closeAllPopups();
-        });
-      if (isSucssesful) {
-        return Promise.resolve();
-      }
-      return Promise.reject();
-    };
-    this.editPopupSubmitHandler = async (inputs) => {
-      let isSucssesful = false;
-      await api
-        .setUserInfo({
-          name: inputs.forename,
-          about: inputs.job,
-        })
-        .then((data) => {
-          this.setState({
-            name: data.name,
-            about: data.about,
-          });
-
-          isSucssesful = true;
-          this.closeAllPopups();
-        });
-      if (isSucssesful) {
-        return Promise.resolve();
-      }
-      return Promise.reject();
-    };
+    if (isSucssesful) {
+      return Promise.resolve();
+    }
+    return Promise.reject();
+  };
+  const PopupsData = {
+    editPopupState,
+  addPopupState,
+  avatarPopupState, 
+  deletePopupState,
+  deletePopupSubmitHandler,
+  avatarPopupSubmitHandler,
+  addPopupSubmitHandler,
+  editPopupSubmitHandler,
   }
-
-  componentDidMount() {
+  React.useEffect(() =>  {
     api.getInitialCards().then((value) => {
-      this.setState({ cards: value });
+      setCards(value);
     });
     api.getUserInformation().then((value) => {
-      this.setState({
-        avatarUrl: value.avatar,
-        name: value.name,
-        about: value.about,
-        userId: value._id,
-      });
-    });
-  }
-
-  render() {
-    return (
-      <>
-        <Header />
-        <Main
-          onEditAvatar={this.isEditAvatarPopupOpen}
-          onEditProfile={this.isEditProfilePopupOpen}
-          onAddPlace={this.isAddPlacePopupOpen}
-          onCardClick={this.handleCardClick}
-          onDelete={this.handleDeleteClick}
-          cards={this.state.cards}
-          avatarUrl={this.state.avatarUrl}
-          name={this.state.name}
-          about={this.state.about}
-          userId={this.state.userId}
-        />
-        <Footer />
-        <PopupWithImage
-          onClose={this.closeAllPopups}
-          card={this.state.selectedCard}
-          isOpen={this.state.imgPopupState}
-        />
-        {popupsInfo.map((item) => {
-          return (
-            <PopupWithForm
-              key={item.name}
-              isOpen={this.state[`${item.name}PopupState`]}
-              onSubmitForm={this[`${item.name}PopupSubmitHandler`]}
-              settings={item}
-              onClose={this.closeAllPopups}
-              forename={this.state.name}
-              job={this.state.about}
-            />
-          );
-        })}
-      </>
-    );
-  }
+        setAvatarUrl(value.avatar);
+        setName(value.name);
+        setAbout(value.about);
+        setUserId(value._id);
+    })
+  })
+  return (
+    <>
+      <Header />
+      <Main
+        onEditAvatar={isEditAvatarPopupOpen}
+        onEditProfile={isEditProfilePopupOpen}
+        onAddPlace={isAddPlacePopupOpen}
+        onCardClick={handleCardClick}
+        onDelete={handleDeleteClick}
+        cards={cards}
+        avatarUrl={avatarUrl}
+        name={name}
+        about={about}
+        userId={userId}
+      />
+      <Footer />
+      <PopupWithImage
+        onClose={closeAllPopups}
+        card={selectedCard}
+        isOpen={imgPopupState}
+      />
+      {popupsInfo.map((item) => {
+        return (
+          <PopupWithForm
+            key={item.name}
+            isOpen={PopupsData[`${item.name}PopupState`]}
+            onSubmitForm={PopupsData[`${item.name}PopupSubmitHandler`]}
+            settings={item}
+            onClose={closeAllPopups}
+            forename={name}
+            job={about}
+          />
+        );
+      })}
+    </>
+  );
 }
-
-export default App;
