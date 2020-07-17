@@ -18,7 +18,6 @@ export default class Main extends React.Component {
       this.setState({ cards: value });
     });
     api.getUserInformation().then((value) => {
-      this.userId = value._id;
       this.setState({
         avatarUrl: value.avatar,
         name: value.name,

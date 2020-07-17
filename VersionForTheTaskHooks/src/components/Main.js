@@ -2,32 +2,24 @@ import React from "react";
 import { api } from "../utils/Api.js";
 import Card from "./Card.js";
 
-export default class Main extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cards: [],
-      avatarUrl: "",
-      name: "",
-      about: "",
-      userId: ""
-    };
-  } 
-     componentDidMount() {
+export default function Main (props) {
+  const [cards, setCards] = React.useState([]);
+  const [avatarUrl, setAvatarUrl] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [about, setAbout] = React.useState("");
+  const [userId, setUserId] = React.useState("");
+
+React.useEffect(() =>  {
     api.getInitialCards().then((value) => {
-      this.setState({ cards: value });
+      setCards(value);
     });
     api.getUserInformation().then((value) => {
-      this.userId = value._id;
-      this.setState({
-        avatarUrl: value.avatar,
-        name: value.name,
-        about: value.about,
-        userId: value._id,
-      });
-    });
-  } 
-  render() {
+        setAvatarUrl(value.avatar);
+        setName(value.name);
+        setAbout(value.about);
+        setUserId(value._id);
+    })
+  })
     return (
       <main>
         <section className="profile">
@@ -35,37 +27,37 @@ export default class Main extends React.Component {
             <img
               alt="Аватар"
               className="profile__avatar"
-              src={this.state.avatarUrl}
+              src={avatarUrl}
             />
             <button
               className="profile__avatar-overlay"
-              onClick={this.props.onEditAvatar}
+              onClick={props.onEditAvatar}
             ></button>
             <div className="profile__info">
               <div className="profile__inner-wrapper profile__inner-wrapper_place_name">
-                <h1 className="profile__name">{this.state.name}</h1>
+                <h1 className="profile__name">{name}</h1>
                 <button
                   className="profile__edit-button"
-                  onClick={this.props.onEditProfile}
+                  onClick={props.onEditProfile}
                 ></button>
               </div>
-              <p className="profile__subtitle">{this.state.about}</p>
+              <p className="profile__subtitle">{about}</p>
             </div>
           </div>
           <button
             className="profile__add-button"
-            onClick={this.props.onAddPlace}
+            onClick={props.onAddPlace}
           ></button>
         </section>
 
         <section className="card__container">
-          {this.state.cards.map((item) => {
+          {cards.map((item) => {
             return (
               <Card
-                userId={this.state.userId}
-                onCardClick={this.props.onCardClick}
+                userId={userId}
+                onCardClick={props.onCardClick}
                 isLiked={item.likes.some((item) => {
-                  return item._id === this.state.userId;
+                  return item._id === userId;
                 })}
                 ownerId={item.owner._id}
                 key={item._id}
@@ -73,12 +65,12 @@ export default class Main extends React.Component {
                 url={item.link}
                 likeCount={item.likes.length}
                 cardId = {item._id}
-                onDelete = {this.props.onDelete}
+                onDelete = {props.onDelete}
               />
             );
           })}
         </section>
       </main>
     );
-  }
+  
 }

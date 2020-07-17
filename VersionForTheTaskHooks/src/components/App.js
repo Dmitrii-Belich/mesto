@@ -6,70 +6,71 @@ import PopupWithForm from "./PopupWithForm.js";
 import PopupWithImage from "./PopupWithImage.js";
 import { popupsInfo } from "../utils/constants.js";
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      editPopupState: false,
-      addPopupState: false,
-      avatarPopupState: false,
-      deletePopupState: false,
-      imgPopupState: false,
-      selectedCard: {},
+export default function App() {
+  const [editPopupState, setEditPopupState] = React.useState(false);
+  const [addPopupState, setAddPopupState] = React.useState(false);
+  const [avatarPopupState, setAvatarPopupState] = React.useState(false);
+  const [deletePopupState, setDeletePopupState] = React.useState(false);
+  const [imgPopupState, setImgPopupState] = React.useState(false);
+  const [selectedCard, setSelectedCard] = React.useState({});
+  const popupsState = 
+    {
+      editPopupState,
+      addPopupState,
+      avatarPopupState,
+      deletePopupState,
+      imgPopupState,
+      selectedCard,
     };
-    this.closeAllPopups = () => {
-      this.setState({
-        editPopupState: false,
-        addPopupState: false,
-        avatarPopupState: false,
-        deletePopupState: false,
-        imgPopupState: false,
-        selectedCard: {},
-      });
-    };
-    this.isEditProfilePopupOpen = () => {
-      this.setState({ editPopupState: true });
-    };
-    this.isAddPlacePopupOpen = () => {
-      this.setState({ addPopupState: true });
-    };
-    this.isEditAvatarPopupOpen = () => {
-      this.setState({ avatarPopupState: true });
-    };
-    this.handleCardClick = (card) => {
-      this.setState({ selectedCard: card, imgPopupState: true });
-    };
-  }
+  const closeAllPopups = () => {
+    setEditPopupState(false);
+    setAddPopupState(false);
+    setAvatarPopupState(false);
+    setDeletePopupState(false);
+    setImgPopupState(false);
+    setSelectedCard({});
+  };
+  const isEditProfilePopupOpen = () => {
+    setEditPopupState(true);
+  };
+  const isAddPlacePopupOpen = () => {
+    setAddPopupState(true);
+  };
+  const isEditAvatarPopupOpen = () => {
+    setAvatarPopupState(true);
+  };
+  const handleCardClick = (card) => {
+    setImgPopupState(true);
+    setSelectedCard(card);
+  };
 
-  render() {
-    return (
-      <>
-        <Header />
-        <Main
-          onEditAvatar={this.isEditAvatarPopupOpen}
-          onEditProfile={this.isEditProfilePopupOpen}
-          onAddPlace={this.isAddPlacePopupOpen}
-          onCardClick={this.handleCardClick}
-        />
-        <Footer />
-        <PopupWithImage
-          onClose={this.closeAllPopups}
-          card={this.state.selectedCard}
-          isOpen={this.state.imgPopupState}
-        />
-        {popupsInfo.map((item) => {
-          return (
-            <PopupWithForm
-              key={item.name}
-              isOpen={this.state[`${item.name}PopupState`]}
-              settings={item}
-              onClose={this.closeAllPopups}
-            />
-          );
-        })}
-      </>
-    );
-  }
+  return (
+    <>
+      <Header />
+      <Main
+        onEditAvatar={isEditAvatarPopupOpen}
+        onEditProfile={isEditProfilePopupOpen}
+        onAddPlace={isAddPlacePopupOpen}
+        onCardClick={handleCardClick}
+      />
+      <Footer />
+      <PopupWithImage
+        onClose={closeAllPopups}
+        card={selectedCard}
+        isOpen={imgPopupState}
+      />
+      {popupsInfo.map((item) => {
+        return (
+          <PopupWithForm
+            key={item.name}
+            isOpen={popupsState[`${item.name}PopupState`]}
+            settings={item}
+            onClose={closeAllPopups}
+          >
+            {item.children}{" "}
+          </PopupWithForm>
+        );
+      })}
+    </>
+  );
 }
-
-export default App;
