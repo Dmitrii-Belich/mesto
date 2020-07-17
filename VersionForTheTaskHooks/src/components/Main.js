@@ -1,19 +1,19 @@
 import React from "react";
-//import { api } from "../utils/Api.js";
+import { api } from "../utils/Api.js";
 import Card from "./Card.js";
 
 export default class Main extends React.Component {
-/*   constructor(props) {
+  constructor(props) {
     super(props);
     this.state = {
       cards: [],
       avatarUrl: "",
       name: "",
       about: "",
+      userId: ""
     };
-  } */
-
-/*   componentDidMount() {
+  } 
+     componentDidMount() {
     api.getInitialCards().then((value) => {
       this.setState({ cards: value });
     });
@@ -23,9 +23,10 @@ export default class Main extends React.Component {
         avatarUrl: value.avatar,
         name: value.name,
         about: value.about,
+        userId: value._id,
       });
     });
-  } */
+  } 
   render() {
     return (
       <main>
@@ -34,7 +35,7 @@ export default class Main extends React.Component {
             <img
               alt="Аватар"
               className="profile__avatar"
-              src={this.props.avatarUrl}
+              src={this.state.avatarUrl}
             />
             <button
               className="profile__avatar-overlay"
@@ -42,13 +43,13 @@ export default class Main extends React.Component {
             ></button>
             <div className="profile__info">
               <div className="profile__inner-wrapper profile__inner-wrapper_place_name">
-                <h1 className="profile__name">{this.props.name}</h1>
+                <h1 className="profile__name">{this.state.name}</h1>
                 <button
                   className="profile__edit-button"
                   onClick={this.props.onEditProfile}
                 ></button>
               </div>
-              <p className="profile__subtitle">{this.props.about}</p>
+              <p className="profile__subtitle">{this.state.about}</p>
             </div>
           </div>
           <button
@@ -58,13 +59,13 @@ export default class Main extends React.Component {
         </section>
 
         <section className="card__container">
-          {this.props.cards.map((item) => {
+          {this.state.cards.map((item) => {
             return (
               <Card
-                userId={this.props.userId}
+                userId={this.state.userId}
                 onCardClick={this.props.onCardClick}
                 isLiked={item.likes.some((item) => {
-                  return item._id === this.props.userId;
+                  return item._id === this.state.userId;
                 })}
                 ownerId={item.owner._id}
                 key={item._id}

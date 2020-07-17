@@ -1,5 +1,0 @@
-.popup__form-error_display_visible {
-  opacity: 1;
-  visibility: visible;
-  transition: visibility 0.2s, opacity 0.2s linear;
-}
