@@ -16,19 +16,21 @@ export default class Main extends React.Component {
   }
 
   componentDidMount() {
-    api.getInitialCards().then((value) => {
-      this.setState({ cards: value });
-    });
-    api.getUserInformation().then((value) => {
-      this.setState({
-        avatarUrl: value.avatar,
-        name: value.name,
-        about: value.about,
-        userId: value._id,
-      });
-    });
+    Promise.all([api.getInitialCards(), api.getUserInformation()])
+      .then((values) => {
+        const cards = values[0];
+        const userInfo = values[1];
+        this.setState({
+          avatarUrl: userInfo.avatar,
+          name: userInfo.name,
+          about: userInfo.about,
+          userId: userInfo._id,
+          cards: cards,
+        });
+      })
+      .catch((err) => console.log(err));
   }
-  
+
   render() {
     return (
       <main>
