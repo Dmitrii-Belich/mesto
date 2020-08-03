@@ -1,83 +1,96 @@
 import React from "react";
-import Header from "./Header.js";
-import Footer from "./Footer.js";
-import Main from "./Main.js";
-import PopupWithForm from "./PopupWithForm.js";
-import PopupWithImage from "./PopupWithImage.js";
-import { popupsInfo } from "../utils/constants.js";
+import Header from "./Header";
+import Footer from "./Footer";
+import Main from "./Main";
+import PopupWithForm from "./PopupWithForm";
+import PopupWithImage from "./PopupWithImage";
+import { popupsInfo } from "../utils/constants";
+import {api} from "../utils/Api";
+import {CurrentUserContext} from '../contexts/CurrentUserContext';
 
-export default class App extends React.Component {
-  constructor() {
-    super();
 
-    this.state = {
-      editPopupState: false,
-      addPopupState: false,
-      avatarPopupState: false,
-      deletePopupState: false,
-      imgPopupState: false,
-      selectedCard: {},
-    };
 
-    this.closeAllPopups = () => {
-      this.setState({
-        editPopupState: false,
-        addPopupState: false,
-        avatarPopupState: false,
-        deletePopupState: false,
-        imgPopupState: false,
-        selectedCard: {},
-      });
-    };
+export default function App() {
 
-    this.isEditProfilePopupOpen = () => {
-      this.setState({ editPopupState: true });
-    };
+  const [editPopupState, setEditPopupState] = React.useState(false);
+  const [addPopupState, setAddPopupState] = React.useState(false);
+  const [avatarPopupState, setAvatarPopupState] = React.useState(false);
+  const [deletePopupState, setDeletePopupState] = React.useState(false);
+  const [imgPopupState, setImgPopupState] = React.useState(false);
+  const [selectedCard, setSelectedCard] = React.useState({});
+  const [currentUser, setCurrentUser] = React.useState({})
+  
 
-    this.isAddPlacePopupOpen = () => {
-      this.setState({ addPopupState: true });
-    };
+  React.useEffect(() => {
+    api.getUserInformation()
+    .then((value) => {
+      setCurrentUser(value)
+    })
+    .catch((err) => console.log(err));
+  }, []);
 
-    this.isEditAvatarPopupOpen = () => {
-      this.setState({ avatarPopupState: true });
-    };
+  const popupsState = {
+    editPopupState,
+    addPopupState,
+    avatarPopupState,
+    deletePopupState,
+    imgPopupState,
+    selectedCard,
+  };
 
-    this.handleCardClick = (card) => {
-      this.setState({ selectedCard: card, imgPopupState: true });
-    };
+  const closeAllPopups = () => {
+    setEditPopupState(false);
+    setAddPopupState(false);
+    setAvatarPopupState(false);
+    setDeletePopupState(false);
+    setImgPopupState(false);
+    setSelectedCard({});
+  };
 
-  }
+  const isEditProfilePopupOpen = () => {
+    setEditPopupState(true);
+  };
 
-  render() {
-    return (
-      <>
-        <Header />
-        <Main
-          onEditAvatar={this.isEditAvatarPopupOpen}
-          onEditProfile={this.isEditProfilePopupOpen}
-          onAddPlace={this.isAddPlacePopupOpen}
-          onCardClick={this.handleCardClick}
-        />
-        <Footer />
-        <PopupWithImage
-          onClose={this.closeAllPopups}
-          card={this.state.selectedCard}
-          isOpen={this.state.imgPopupState}
-        />
-        {popupsInfo.map((item) => {
-          return (
-            <PopupWithForm
-              key={item.name}
-              isOpen={this.state[`${item.name}PopupState`]}
-              settings={item}
-              onClose={this.closeAllPopups}
-            >
-              {item.children}{" "}
-            </PopupWithForm>
-          );
-        })}
-      </>
-    );
-  }
+  const isAddPlacePopupOpen = () => {
+    setAddPopupState(true);
+  };
+
+  const isEditAvatarPopupOpen = () => {
+    setAvatarPopupState(true);
+  };
+  
+  const handleCardClick = (card) => {
+    setImgPopupState(true);
+    setSelectedCard(card);
+  };
+
+  return (
+    <CurrentUserContext.Provider value={currentUser}>
+      <Header />
+      <Main
+        onEditAvatar={isEditAvatarPopupOpen}
+        onEditProfile={isEditProfilePopupOpen}
+        onAddPlace={isAddPlacePopupOpen}
+        onCardClick={handleCardClick}
+      />
+      <Footer />
+      <PopupWithImage
+        onClose={closeAllPopups}
+        card={selectedCard}
+        isOpen={imgPopupState}
+      />
+      {popupsInfo.map((item) => {
+        return (
+          <PopupWithForm
+            key={item.name}
+            isOpen={popupsState[`${item.name}PopupState`]}
+            settings={item}
+            onClose={closeAllPopups}
+          >
+            {item.children}{" "}
+          </PopupWithForm>
+        );
+      })}
+    </CurrentUserContext.Provider>
+  );
 }
-
