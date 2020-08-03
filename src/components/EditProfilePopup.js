@@ -2,13 +2,13 @@ import React from "react";
 import {CurrentUserContext} from '../contexts/CurrentUserContext';
 import Input from './ui/Input'
 
-import Popup from "./Popup"
+import PopupWithForm from "./PopupWithForm"
 
-export default function EditProfilePopup({ isOpen, onClose}) {
+export default function EditProfilePopup({ isOpen, onClose, onUpdateUser}) {
     const currentUser = React.useContext(CurrentUserContext);
     const [buttonText, setButtonText] =React.useState('Сохранить');
-    const [name, setName] = React.useState('');
-    const [desctiption, setDescription] = React.useState('')
+    const [name, setName] = React.useState(currentUser.name);
+    const [description, setDescription] = React.useState(currentUser.about)
     const inputChangers = {
         name: setName,
         description: setDescription
@@ -20,12 +20,22 @@ export default function EditProfilePopup({ isOpen, onClose}) {
       }, [currentUser, isOpen]);
 
       const inputHandler = (value, name) => {
-        inputChangers[name](value)
+       inputChangers[name](value)
+      }
+      const handleSubmit = (evt) => {
+        evt.preventDefault()
+        setButtonText('Сохранение...')
+        onUpdateUser({
+          name,
+          about: description,
+        }).then(() => {
+          setButtonText('Сохранить')
+        }).catch(() => {
+          setButtonText('Ошибка')
+        });
       }
   return (
-    <Popup isOpen={isOpen} onClose={onClose}>
-      <form className="popup__container" name='edit' noValidate>
-        <h2 className="popup__title">Редактировать профиль</h2>
+    <PopupWithForm  isOpen={isOpen} onClose={onClose} title="Редактировать профиль" name="edit" buttonText={buttonText} onSubmit={handleSubmit}>
         <Input
           type="text"
           className="popup__input"
@@ -34,11 +44,11 @@ export default function EditProfilePopup({ isOpen, onClose}) {
           minLength="2"
           maxLength="40"
           pattern="[ёЁА-Яа-яA-Za-z -]{1,}"
-          value={name}
+          value={name || ''}
           update={isOpen}
           onChange={inputHandler}
         />
-        <Input
+         <Input
           type="text"
           className="popup__input"
           name="description"
@@ -46,17 +56,9 @@ export default function EditProfilePopup({ isOpen, onClose}) {
           minLength="2"
           maxLength="200"
           update={isOpen}
-          value={desctiption}
+          value={description || ''}
           onChange={inputHandler}
-        />
-        <button type="submit" className="popup__save">{buttonText}
-        </button>
-        <button
-          type="button"
-          className="popup__exit-button"
-          onClick={onClose}
-        ></button>
-      </form>
-    </Popup>
+        /> 
+    </PopupWithForm >
   );
 }
