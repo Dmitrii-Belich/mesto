@@ -2,9 +2,8 @@ import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Main from "./Main";
-import PopupWithForm from "./PopupWithForm";
 import PopupWithImage from "./PopupWithImage";
-import { popupsInfo } from "../utils/constants";
+import EditProfilePopup from "./EditProfilePopup";
 import {api} from "../utils/Api";
 import {CurrentUserContext} from '../contexts/CurrentUserContext';
 
@@ -28,15 +27,6 @@ export default function App() {
     })
     .catch((err) => console.log(err));
   }, []);
-
-  const popupsState = {
-    editPopupState,
-    addPopupState,
-    avatarPopupState,
-    deletePopupState,
-    imgPopupState,
-    selectedCard,
-  };
 
   const closeAllPopups = () => {
     setEditPopupState(false);
@@ -80,18 +70,11 @@ export default function App() {
         card={selectedCard}
         isOpen={imgPopupState}
       />
-      {popupsInfo.map((item) => {
-        return (
-          <PopupWithForm
-            key={item.name}
-            isOpen={popupsState[`${item.name}PopupState`]}
-            settings={item}
-            onClose={closeAllPopups}
-          >
-            {item.children}{" "}
-          </PopupWithForm>
-        );
-      })}
+      <EditProfilePopup 
+      isOpen={editPopupState}
+      onClose={closeAllPopups}
+      />
+
     </CurrentUserContext.Provider>
   );
 }
