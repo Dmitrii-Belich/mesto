@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Popup({ isOpen, onClose, children }) {
+export default function Popup({ isOpen, onClose, children,  }) {
   return (
     <div
       className={`popup ${isOpen && "popup_display_opened"}`}

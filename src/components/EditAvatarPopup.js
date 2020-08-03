@@ -5,10 +5,12 @@ import PopupWithForm from "./PopupWithForm";
 
 export default function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
   const [buttonText, setButtonText] = React.useState("Сохранить");
+  const [validity, setValidity] = React.useState(false);
  //  const inputRef = React.useRef() если использовать ref
   const [url, setUrl] = React.useState('');
-  const inputHandler = (value) => {
+  const inputHandler = (value, name ,validity) => {
     setUrl(value)
+    setValidity(validity)
   };
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -16,20 +18,24 @@ export default function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
     // onUpdateAvatar(inputRef.current.value) если использовать ref
     onUpdateAvatar (url)
       .then(() => {
-        setButtonText("Сохранить");
+        clearInput()
       })
       .catch(() => {
         setButtonText("Ошибка");
       });
   };
+  const clearInput = () => {
+    setTimeout(()=> {setUrl(''); setButtonText("Сохранить")}, 200)
+  }
   return (
     <PopupWithForm
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => {onClose(); clearInput()}}
       title="Обновить аватар"
       name="avatar"
       buttonText={buttonText}
       onSubmit={handleSubmit}
+      isFormValid={validity}
     >
       <Input
   //     ref={inputRef} если использовать ref, и использовать обычный input

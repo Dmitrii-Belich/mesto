@@ -4,6 +4,7 @@ import Input from "./ui/Input";
 import PopupWithForm from "./PopupWithForm";
 
 export default function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
+    const [validity, setValidity] = React.useState({title: false, url: false});
   const [buttonText, setButtonText] = React.useState("Создать");
   const [title, setTitle] = React.useState('')
   const [url, setUrl] = React.useState('');
@@ -18,23 +19,35 @@ export default function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
 
     onAddPlace({ name: title, link: url})
       .then(() => {
-        setButtonText("Создать");
+        clearInput()
       })
       .catch(() => {
         setButtonText("Ошибка");
       });
   };
-  const inputHandler = (value, name) => {
+  const inputHandler = (value, name, inputValidity) => {
     inputChangers[name](value)
+    const newValidity = Object.assign({}, validity);
+    newValidity[name] = inputValidity;
+    setValidity(newValidity); 
    }
+   const clearInput = () => {
+    setTimeout(()=> {setUrl(''); setTitle(''); setValidity({title: false, url: false}); setButtonText("Создать")}, 200)
+  }
+  const isFormValid = () => {
+        return Object.values(validity).reduce((summ, currentItem) => {
+          return summ && currentItem;
+        });
+  }
   return (
     <PopupWithForm
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => {onClose(); clearInput()}}
       title="Новое место"
       name="add"
       buttonText={buttonText}
       onSubmit={handleSubmit}
+      isFormValid={isFormValid()}
     >
               <Input
           type="text"

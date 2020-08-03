@@ -11,7 +11,7 @@ export default function Input({name, pattern, required, placeholder, value, maxL
   }, [update]);
 
   const changeHandler = (evt) => {
-    onChange(evt.target.value, name);
+    onChange(evt.target.value, name, evt.target.validity.valid);
     setIsInputValid(evt.target.validity.valid);
     setValidationMessage(evt.target.validationMessage);
   };

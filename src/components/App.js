@@ -7,7 +7,8 @@ import EditProfilePopup from "./EditProfilePopup";
 import { api } from "../utils/Api";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import EditAvatarPopup from "./EditAvatarPopup";
-import AddPlacePopup from './AddPlacePopup'
+import AddPlacePopup from './AddPlacePopup';
+import DeleteCardPopup from './DeleteCardPopup'
 
 export default function App() {
   const [editPopupState, setEditPopupState] = React.useState(false);
@@ -44,12 +45,9 @@ export default function App() {
     }
   }
 
-  const handleCardDelete = (id) => {
-    api.deleteCard(id).then(() => {
-      const newCards =   cards.filter(card => card._id !== id);
-      setCards(newCards)
-    })
-    
+  const handleCardDelete = (id) => { 
+    setSelectedCard({id})
+    setDeletePopupState(true)
   }
 
   const closeAllPopups = () => {
@@ -107,12 +105,27 @@ export default function App() {
     }
     return Promise.reject();
   };
-  const andleAddPlaceSubmit = async (card) => {
+  const handleAddPlaceSubmit = async (card) => {
     let isSucssesful = false;
     await api
       .createCard(card)
       .then((newCard) => {
         setCards([newCard, ...cards ]); 
+        closeAllPopups();
+        isSucssesful = true;
+      })
+      .catch(errShow);
+    if (isSucssesful) {
+      return Promise.resolve();
+    }
+    return Promise.reject();
+  }
+  const handleDeleteSubmit = async () => {
+    let isSucssesful = false;
+    await api.deleteCard(selectedCard.id)
+      .then((card) => {
+        const newCards = cards.filter(card => card._id !== selectedCard.id);
+      setCards(newCards)
         closeAllPopups();
         isSucssesful = true;
       })
@@ -154,7 +167,12 @@ export default function App() {
       <AddPlacePopup 
       isOpen={addPopupState}
       onClose={closeAllPopups}
-      onAddPlace={andleAddPlaceSubmit}
+      onAddPlace={handleAddPlaceSubmit}
+      />
+      <DeleteCardPopup
+      isOpen={deletePopupState}
+      onClose={closeAllPopups}
+      onDelete={handleDeleteSubmit}
       />
     </CurrentUserContext.Provider>
   );
