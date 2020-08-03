@@ -8,7 +8,8 @@ export default function Card({
   likes,
   ownerId,
   cardId,
-  onCardLike
+  onCardLike,
+  onCardDelete
 }) {
   const { _id: userId } = React.useContext(CurrentUserContext);
   const isLiked = likes.some((item) => {
@@ -37,7 +38,7 @@ export default function Card({
         }`}
       ></button>
       <p className="card__like-count">{likes.length}</p>
-      {ownerId === userId && <button className="card__delete"></button>}
+      {ownerId === userId && <button className="card__delete" onClick={() => {onCardDelete(cardId)}}></button>}
     </div>
   );
 }

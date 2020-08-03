@@ -33,6 +33,14 @@ export default function Main({
       api.setLike(id).then(likeShow).catch(errShow);
     }
   }
+
+  const handleCardDelete = (id) => {
+    api.deleteCard(id).then(() => {
+      const newCards =   cards.filter(card => card._id !== id);
+      setCards(newCards)
+    })
+    
+  }
   return (
     <main>
       <section className="profile">
@@ -69,6 +77,7 @@ export default function Main({
               cardId={item._id}
               onCardLike= {handleCardLike
               }
+              onCardDelete= {handleCardDelete}
             />
           );
         })}

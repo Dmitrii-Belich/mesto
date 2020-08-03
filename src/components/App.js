@@ -63,6 +63,7 @@ export default function App() {
     setImgPopupState(true);
     setSelectedCard(card);
   };
+  
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
